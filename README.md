@@ -28,7 +28,8 @@ use Rackbeat\PDFMerger\MergeablePDF;
 
 $pdf = MergeablePDF::make('path/to/my/file.pdf')
                    ->add('RAW_CONTENT_FROM_ANOTHER_PDF')
-                   ->addMany(['path/to/other.pdf', 'RAW_PDF_CONTENT']);
+                   // Add multiple PDFs from array
+                   ->add(['path/to/other.pdf', 'RAW_PDF_CONTENT']);
                     
 // Merge directly
 echo $pdf->merge();

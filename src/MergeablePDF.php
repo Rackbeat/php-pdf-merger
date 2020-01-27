@@ -40,8 +40,8 @@ class MergeablePDF
 	}
 
 	/**
-	 * @param string|\SplFileObject|\Barryvdh\DomPDF\PDF|\Dompdf\Dompdf $page
-	 * @param null|PagesInterface                                       $pagesConstraint
+	 * @param string|\SplFileObject|\Barryvdh\DomPDF\PDF|\Dompdf\Dompdf|array|string[]|\SplFileObject[]|\Barryvdh\DomPDF\PDF[]|\Dompdf\Dompdf[] $page
+	 * @param null|PagesInterface                                                                                                               $pagesConstraint
 	 *
 	 * @return self
 	 * @throws PageIsEmptyException
@@ -49,6 +49,11 @@ class MergeablePDF
 	public function add( $page, ?PagesInterface $pagesConstraint = null ): self {
 		if ( ! $page ) {
 			throw new PageIsEmptyException( 'The passed in page is empty' );
+		}
+
+		// Helper to allow array inside the add method.
+		if ( is_array( $page ) ) {
+			return $this->addMany( $page, $pagesConstraint );
 		}
 
 		if ( $page instanceof \SplFileObject ) {
