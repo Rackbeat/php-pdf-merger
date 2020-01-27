@@ -2,6 +2,7 @@
 
 use iio\libmergepdf\PagesInterface;
 use iio\libmergepdf\Merger as LibMerger;
+use Rackbeat\PDFMerger\Exceptions\LaravelIsNotInstalledException;
 use Rackbeat\PDFMerger\Exceptions\PageIsEmptyException;
 
 class MergeablePDF
@@ -19,7 +20,7 @@ class MergeablePDF
 		$this->merger = new LibMerger();
 
 		if ( $source ) {
-			$this->addPage( $source, $pagesConstraint );
+			$this->add( $source, $pagesConstraint );
 		}
 	}
 
@@ -102,8 +103,13 @@ class MergeablePDF
 	 * @param int    $status
 	 *
 	 * @return \Illuminate\Http\Response
+	 * @throws LaravelIsNotInstalledException
 	 */
 	public function response( $filename = 'file.pdf', $status = 200 ) {
+		if ( ! class_exists( \Illuminate\Http\Response::class ) ) {
+			throw new LaravelIsNotInstalledException( 'Could not find Laravel \Illuminate\Http\Response class.' );
+		}
+
 		return new \Illuminate\Http\Response(
 			$this->merge(), $status, [
 				'Content-Type'        => 'application/pdf',
@@ -119,8 +125,13 @@ class MergeablePDF
 	 * @param int    $status
 	 *
 	 * @return \Illuminate\Http\Response
+	 * @throws LaravelIsNotInstalledException
 	 */
 	public function download( $filename = 'file.pdf', $status = 200 ) {
+		if ( ! class_exists( \Illuminate\Http\Response::class ) ) {
+			throw new LaravelIsNotInstalledException( 'Could not find Laravel \Illuminate\Http\Response class.' );
+		}
+
 		return new \Illuminate\Http\Response(
 			$this->merge(), $status, [
 				'Content-Type'        => 'application/pdf',
